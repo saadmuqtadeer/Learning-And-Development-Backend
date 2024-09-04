@@ -15,6 +15,8 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 // Configure the HTTP request pipeline.
 
 var app = builder.Build();
+
+app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthorization();
 
 app.MapControllers();

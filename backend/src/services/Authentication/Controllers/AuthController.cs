@@ -29,7 +29,7 @@ namespace Authentication.Controllers
             if(model == null) return BadRequest();
 
             // Check if the email already exists
-            var existingUser = await _context.registers.FirstOrDefaultAsync(u => u.EmployeeId == model.EmployeeId);
+            var existingUser = await _context.registers.FirstOrDefaultAsync(u => u.Email == model.Email);
             if (existingUser != null)
             {
                 return Conflict(new { Message = "User with this email already exists." });
@@ -42,7 +42,8 @@ namespace Authentication.Controllers
             var user = new Register
             {
                 EmployeeId = model.EmployeeId,
-                Username = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
                 Email = model.Email,
                 Password = model.Password,
                 PhoneNumber = model.PhoneNumber,
@@ -64,10 +65,11 @@ namespace Authentication.Controllers
             var model = Authenticate(login);
             if (model != null)
             {
+                string Username = model.FirstName + " "+ model.LastName;
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Email, model.Email),
-                    new Claim(ClaimTypes.Name, model.Username),
+                    new Claim(ClaimTypes.Name, Username),
                     new Claim(ClaimTypes.Role, model.Role),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
