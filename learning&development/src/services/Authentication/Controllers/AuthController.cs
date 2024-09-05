@@ -1,5 +1,6 @@
 ﻿using AuthAPI.Data;
 using AuthAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,23 +23,27 @@ namespace Authentication.Controllers
             _context = context;
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> GetAll() { 
+            return Ok(await _context.registers.ToListAsync());
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Registration([FromBody] Register model)
         {
             if(model == null) return BadRequest();
 
-            // Check if the email already exists
             var existingUser = await _context.registers.FirstOrDefaultAsync(u => u.Email == model.Email);
-            if (existingUser != null)
-            {
-                return Conflict(new { Message = "User with this email already exists." });
-            }
+            if (existingUser != null)   return Conflict(new { Message = "User with this email already exists." });
+           
 
             // Hash the password (replace with your preferred hashing method)
             //var hashedPassword = Bcrypt.Net.BCrypt.HashPassword(model.Password);
 
-            // Create a new User entity
             var user = new Register
             {
                 EmployeeId = model.EmployeeId,
@@ -51,7 +56,6 @@ namespace Authentication.Controllers
                 Role = model.Role
             };
 
-            // Add to DbSet and save changes
             _context.registers.Add(user);
             await _context.SaveChangesAsync();
 
@@ -62,45 +66,49 @@ namespace Authentication.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] Login login)
         {
-            var model = Authenticate(login);
-            if (model != null)
+            if (login == null || string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.Password))
             {
-                string Username = model.FirstName + " "+ model.LastName;
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Email, model.Email),
-                    new Claim(ClaimTypes.Name, Username),
-                    new Claim(ClaimTypes.Role, model.Role),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-                var token = GetToken(authClaims);
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
-            };
-            return Unauthorized();
-        }
-        private JwtSecurityToken GetToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
-            return token;
-        }
+                return BadRequest("Invalid login request.");
+            }
 
-        private Register Authenticate(Login login) {
-            var user = _context.registers.FirstOrDefault(x => x.Email == login.Email);
-            if(user == null) { return null; }
-            if(user.Password == login.Password)
-                return user;
-            return null;
+            var model = _context.registers.FirstOrDefault(x => x.Email == login.Email);
+
+            if (model == null)
+            {
+                return Unauthorized("Invalid email or password.");
+            }
+
+            // Ensure to use proper password hashing and verification in a real application
+            if (model.Password != login.Password)
+            {
+                return Unauthorized("Invalid email or password.");
+            }
+
+            string username = model.FirstName + " " + model.LastName;
+            var identity = new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Email, model.Email),
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, model.Role),
+            });
+
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Expires = DateTime.Now.AddHours(3),
+                Subject = identity,
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Ok(new
+            {
+                token = tokenString,
+                expiration = tokenDescriptor.Expires
+            });
         }
     }
 
