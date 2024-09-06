@@ -23,11 +23,60 @@ namespace Authentication.Controllers
             _context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetAll() { 
+        public async Task<IActionResult> GetAll()
+        {
             return Ok(await _context.registers.ToListAsync());
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var user = await _context.registers.FindAsync(id);
+            if (user == null) return NotFound("User not found.");
+            return Ok(user);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Register updatedUser)
+        {
+            if (updatedUser == null) return BadRequest();
+
+            var user = await _context.registers.FindAsync(id);
+            if (user == null) return NotFound("User not found.");
+
+            user.FirstName = updatedUser.FirstName;
+            user.LastName = updatedUser.LastName;
+            user.Email = updatedUser.Email;
+            user.Password = updatedUser.Password; // Hash the password before saving
+            user.PhoneNumber = updatedUser.PhoneNumber;
+            user.SecurityQuestion = updatedUser.SecurityQuestion;
+            user.Role = updatedUser.Role;
+
+            _context.registers.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "User updated successfully." });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _context.registers.FindAsync(id);
+            if (user == null) return NotFound("User not found.");
+
+            _context.registers.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "User deleted successfully." });
         }
 
         [AllowAnonymous]
@@ -35,11 +84,10 @@ namespace Authentication.Controllers
         [Route("register")]
         public async Task<IActionResult> Registration([FromBody] Register model)
         {
-            if(model == null) return BadRequest();
+            if (model == null) return BadRequest();
 
             var existingUser = await _context.registers.FirstOrDefaultAsync(u => u.Email == model.Email);
-            if (existingUser != null)   return Conflict(new { Message = "User with this email already exists." });
-           
+            if (existingUser != null) return Conflict(new { Message = "User with this email already exists." });
 
             // Hash the password (replace with your preferred hashing method)
             //var hashedPassword = Bcrypt.Net.BCrypt.HashPassword(model.Password);
@@ -59,7 +107,7 @@ namespace Authentication.Controllers
             _context.registers.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Id =  user.EmployeeId, Message = "User registered successfully." });;
+            return Ok(new { Id = user.EmployeeId, Message = "User registered successfully." });
         }
 
         [HttpPost]
@@ -111,5 +159,4 @@ namespace Authentication.Controllers
             });
         }
     }
-
 }
