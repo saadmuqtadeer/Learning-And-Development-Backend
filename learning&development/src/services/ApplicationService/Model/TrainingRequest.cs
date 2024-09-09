@@ -10,9 +10,6 @@ namespace ApplicationService.Model
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Register")]
-        public int RequestorId { get; set; } // Foreign key to Register.EmployeeId
-
         [Required]
         [StringLength(100)]
         public string RequestorName { get; set; }
@@ -55,6 +52,9 @@ namespace ApplicationService.Model
 
         [StringLength(500)]
         public string SpecialRequirements { get; set; }
+
+        [ForeignKey("Register")]
+        public int EmployeeId { get; set; } // Foreign key to Register.EmployeeId
 
         // Navigation property
         public virtual Register Register { get; set; } // Navigation property to Register
