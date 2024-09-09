@@ -54,7 +54,7 @@ namespace Authentication.Controllers
             user.FirstName = updatedUser.FirstName;
             user.LastName = updatedUser.LastName;
             user.Email = updatedUser.Email;
-            user.Password = updatedUser.Password; // Hash the password before saving
+            user.Password = updatedUser.Password;
             user.PhoneNumber = updatedUser.PhoneNumber;
             user.SecurityQuestion = updatedUser.SecurityQuestion;
             user.Role = updatedUser.Role;
@@ -155,7 +155,8 @@ namespace Authentication.Controllers
             return Ok(new
             {
                 token = tokenString,
-                expiration = tokenDescriptor.Expires
+                expiration = tokenDescriptor.Expires,
+                role = model.Role
             });
         }
     }
