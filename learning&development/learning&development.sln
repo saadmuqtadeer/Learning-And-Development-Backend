@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{98
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication", "src\services\Authentication\Authentication.csproj", "{91BA704B-B7A1-4D38-BDCF-9641CF4558C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationService", "src\services\ApplicationService\ApplicationService.csproj", "{5D5F7741-DBC5-4C00-A6FB-2FCC9C80C206}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationService", "src\services\ApplicationService\ApplicationService.csproj", "{5D5F7741-DBC5-4C00-A6FB-2FCC9C80C206}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
