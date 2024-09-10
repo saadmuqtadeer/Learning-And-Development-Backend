@@ -1,12 +1,15 @@
 using ApplicationService.Data;
 using AuthAPI.Data;
+using Carter;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddMediatR(c => {
+    c.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
-builder.Services.AddControllers();
+builder.Services.AddCarter();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -16,10 +19,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.MapCarter();
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapGet("/", () => "Hello World");
 
 app.Run();
