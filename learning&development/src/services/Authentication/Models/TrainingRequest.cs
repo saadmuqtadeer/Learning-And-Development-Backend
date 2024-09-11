@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthAPI.Models
@@ -23,7 +24,7 @@ namespace AuthAPI.Models
 
         [Required]
         [StringLength(500)]
-        public string TrainingDetails { get; set; }
+        public string TrainingDetails { get; set; }  // Changed from TrainingDetails to match frontend
 
         [Required]
         [StringLength(100)]
@@ -33,14 +34,14 @@ namespace AuthAPI.Models
         public string TrainingDescription { get; set; }
 
         [Required]
-        public int NumberOfEmployees { get; set; }
+        public int NumberOfEmployees { get; set; }  // Changed to nullable if needed, but frontend shows nulls as numbers
 
         [Required]
         [StringLength(200)]
-        public string TechnicalSkillSetRequired { get; set; }
+        public string TechnicalSkills { get; set; }  // Changed from TechnicalSkillSetRequired to match frontend
 
         [Required]
-        public int DurationInDays { get; set; }
+        public int Duration { get; set; }  // Changed from DurationInDays to match frontend
 
         [Required]
         public DateTime PreferredStartDate { get; set; }
@@ -51,7 +52,8 @@ namespace AuthAPI.Models
         [StringLength(500)]
         public string SpecialRequirements { get; set; }
 
-        public int EmployeeId { get; set; } // Foreign key to Registers.EmployeeId
+        [Required]
+        public int EmployeeId { get; set; }  // Foreign key to Registers.EmployeeId
 
         // Navigation property
         [ForeignKey("EmployeeId")]

@@ -6,11 +6,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Authentication.Migrations
 {
     /// <inheritdoc />
-    public partial class addfk : Migration
+    public partial class TRDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Registers",
+                columns: table => new
+                {
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityQuestion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Registers", x => x.EmployeeId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "TrainingRequests",
                 columns: table => new
@@ -24,8 +43,8 @@ namespace Authentication.Migrations
                     TrainingTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TrainingDescription = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     NumberOfEmployees = table.Column<int>(type: "int", nullable: false),
-                    TechnicalSkillSetRequired = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    DurationInDays = table.Column<int>(type: "int", nullable: false),
+                    TechnicalSkills = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
                     PreferredStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TrainingLocation = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     SpecialRequirements = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -53,6 +72,9 @@ namespace Authentication.Migrations
         {
             migrationBuilder.DropTable(
                 name: "TrainingRequests");
+
+            migrationBuilder.DropTable(
+                name: "Registers");
         }
     }
 }

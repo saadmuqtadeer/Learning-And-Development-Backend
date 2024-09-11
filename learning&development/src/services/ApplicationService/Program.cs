@@ -21,6 +21,17 @@ builder.Services.AddMediatR(cfg =>
 // Register Carter
 builder.Services.AddCarter();
 
+// Add CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowAnyOrigin();
+    });
+});
+
 // Add authorization services
 builder.Services.AddAuthorization();
 
@@ -29,6 +40,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 app.UseHttpsRedirection(); // Enforce HTTPS if needed
 app.UseRouting();
+app.UseCors(); // Apply CORS policy
 app.UseAuthorization(); // Ensure this is included to use authorization middleware
 
 // Map Carter modules, which should include your endpoints

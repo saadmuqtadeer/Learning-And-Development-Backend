@@ -1,6 +1,10 @@
 ﻿using ApplicationService.AccountsService.Commands.CreateTrainingProgram;
 using AuthAPI.Data;
+using AuthAPI.Models;
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
 {
@@ -14,14 +18,18 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
         public string TrainingTitle { get; set; }
         public string TrainingDescription { get; set; }
         public int NumberOfEmployees { get; set; }
-        public string TechnicalSkillSetRequired { get; set; }
-        public int DurationInDays { get; set; }
+        public string TechnicalSkills { get; set; } // Updated to match the backend model
+        public int Duration { get; set; } // Updated to match the backend model
         public DateTime PreferredStartDate { get; set; }
         public string TrainingLocation { get; set; }
         public string SpecialRequirements { get; set; }
         public int EmployeeId { get; set; }
     }
 
+    public class TrainingResponse
+    {
+        public int Id { get; set; }
+    }
     public class UpdateTrainingRequestHandler : IRequestHandler<UpdateTrainingRequestCommand, TrainingResponse>
     {
         private readonly AuthDbContext _context;
@@ -48,8 +56,8 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
             trainingRequest.TrainingTitle = request.TrainingTitle;
             trainingRequest.TrainingDescription = request.TrainingDescription;
             trainingRequest.NumberOfEmployees = request.NumberOfEmployees;
-            trainingRequest.TechnicalSkillSetRequired = request.TechnicalSkillSetRequired;
-            trainingRequest.DurationInDays = request.DurationInDays;
+            trainingRequest.TechnicalSkills = request.TechnicalSkills; // Updated to match the backend model
+            trainingRequest.Duration = request.Duration; // Updated to match the backend model
             trainingRequest.PreferredStartDate = request.PreferredStartDate;
             trainingRequest.TrainingLocation = request.TrainingLocation;
             trainingRequest.SpecialRequirements = request.SpecialRequirements;

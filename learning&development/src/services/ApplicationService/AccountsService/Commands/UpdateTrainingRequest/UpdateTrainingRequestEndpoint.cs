@@ -7,7 +7,7 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/training/{id:int}", async (int id, HttpRequest req, IMediator mediator) =>
+            app.MapPut("/training-request/{id:int}", async (int id, HttpRequest req, IMediator mediator) =>
             {
                 var command = await req.ReadFromJsonAsync<UpdateTrainingRequestCommand>();
 

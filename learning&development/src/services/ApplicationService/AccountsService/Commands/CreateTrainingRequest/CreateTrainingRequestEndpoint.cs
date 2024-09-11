@@ -9,7 +9,7 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/training", async (HttpRequest req, IMediator mediator) =>
+            app.MapPost("/training-request", async (HttpRequest req, IMediator mediator) =>
             {
                 var command = await req.ReadFromJsonAsync<CreateTrainingRequestCommand>();
 

@@ -73,7 +73,7 @@ namespace Authentication.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("DurationInDays")
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
@@ -100,7 +100,7 @@ namespace Authentication.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("TechnicalSkillSetRequired")
+                    b.Property<string>("TechnicalSkills")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");

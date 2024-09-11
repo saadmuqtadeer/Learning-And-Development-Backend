@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Authentication.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240911011329_add-fk")]
-    partial class addfk
+    [Migration("20240911090844_TR-Db")]
+    partial class TRDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,7 +76,7 @@ namespace Authentication.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("DurationInDays")
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
@@ -103,7 +103,7 @@ namespace Authentication.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("TechnicalSkillSetRequired")
+                    b.Property<string>("TechnicalSkills")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");

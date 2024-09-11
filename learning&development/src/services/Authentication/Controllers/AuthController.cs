@@ -138,6 +138,7 @@ namespace Authentication.Controllers
                 new Claim(ClaimTypes.Email, model.Email),
                 new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.Role, model.Role),
+                new Claim(ClaimTypes.NameIdentifier, model.EmployeeId.ToString())
             });
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -156,7 +157,8 @@ namespace Authentication.Controllers
             {
                 token = tokenString,
                 expiration = tokenDescriptor.Expires,
-                role = model.Role
+                role = model.Role,
+                Id = model.EmployeeId
             });
         }
     }

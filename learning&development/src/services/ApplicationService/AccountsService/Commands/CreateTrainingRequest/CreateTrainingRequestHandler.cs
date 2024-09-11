@@ -1,7 +1,10 @@
 ﻿using AuthAPI.Data;
 using AuthAPI.Models;
 using MediatR;
-
+using System;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
 {
@@ -14,8 +17,8 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
         public string TrainingTitle { get; set; }
         public string TrainingDescription { get; set; }
         public int NumberOfEmployees { get; set; }
-        public string TechnicalSkillSetRequired { get; set; }
-        public int DurationInDays { get; set; }
+        public string TechnicalSkills { get; set; }  // Updated to match the backend model
+        public int Duration { get; set; }  // Updated to match the backend model
         public DateTime PreferredStartDate { get; set; }
         public string TrainingLocation { get; set; }
         public string SpecialRequirements { get; set; }
@@ -26,8 +29,6 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
     {
         public int Id { get; set; }
     }
-
-
     public class CreateTrainingRequestHandler : IRequestHandler<CreateTrainingRequestCommand, TrainingResponse>
     {
         private readonly AuthDbContext _context;
@@ -40,7 +41,7 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
         public async Task<bool> EmployeeExists(int employeeId)
         {
             using var client = new HttpClient();
-            var response = await client.GetAsync($"http://localhost:5000/auth/api/{employeeId}");
+            var response = await client.GetAsync($"http://localhost:5000/api/auth/{employeeId}");
             return response.IsSuccessStatusCode;
         }
 
@@ -51,7 +52,11 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
                 throw new ArgumentNullException(nameof(request));
             }
 
-            
+            // Validate if the employee exists
+            //if (!await EmployeeExists(request.EmployeeId))
+            //{
+            //    throw new Exception("Employee does not exist.");
+            //}
 
             var trainingRequest = new TrainingRequest
             {
@@ -62,8 +67,8 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
                 TrainingTitle = request.TrainingTitle,
                 TrainingDescription = request.TrainingDescription,
                 NumberOfEmployees = request.NumberOfEmployees,
-                TechnicalSkillSetRequired = request.TechnicalSkillSetRequired,
-                DurationInDays = request.DurationInDays,
+                TechnicalSkills = request.TechnicalSkills,  // Updated to match the backend model
+                Duration = request.Duration,  // Updated to match the backend model
                 PreferredStartDate = request.PreferredStartDate,
                 TrainingLocation = request.TrainingLocation,
                 SpecialRequirements = request.SpecialRequirements,
