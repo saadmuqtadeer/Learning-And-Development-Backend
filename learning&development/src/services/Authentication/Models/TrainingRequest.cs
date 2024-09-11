@@ -18,32 +18,25 @@ namespace AuthAPI.Models
         [StringLength(100)]
         public string RequestorEmail { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string Department { get; set; }
+        
+        //[StringLength(500)]
+        //public string TrainingDetails { get; set; }  // Changed from TrainingDetails to match frontend
 
-        [Required]
-        [StringLength(500)]
-        public string TrainingDetails { get; set; }  // Changed from TrainingDetails to match frontend
-
-        [Required]
         [StringLength(100)]
         public string TrainingTitle { get; set; }
 
         [StringLength(500)]
         public string TrainingDescription { get; set; }
 
-        [Required]
         public int NumberOfEmployees { get; set; }  // Changed to nullable if needed, but frontend shows nulls as numbers
 
-        [Required]
         [StringLength(200)]
         public string TechnicalSkills { get; set; }  // Changed from TechnicalSkillSetRequired to match frontend
 
-        [Required]
         public int Duration { get; set; }  // Changed from DurationInDays to match frontend
 
-        [Required]
         public DateTime PreferredStartDate { get; set; }
 
         [StringLength(200)]

@@ -14,7 +14,7 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
         public string RequestorName { get; set; }
         public string RequestorEmail { get; set; }
         public string Department { get; set; }
-        public string TrainingDetails { get; set; }
+        //public string TrainingDetails { get; set; }
         public string TrainingTitle { get; set; }
         public string TrainingDescription { get; set; }
         public int NumberOfEmployees { get; set; }
@@ -52,7 +52,7 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
             trainingRequest.RequestorName = request.RequestorName;
             trainingRequest.RequestorEmail = request.RequestorEmail;
             trainingRequest.Department = request.Department;
-            trainingRequest.TrainingDetails = request.TrainingDetails;
+            //trainingRequest.TrainingDetails = request.TrainingDetails;
             trainingRequest.TrainingTitle = request.TrainingTitle;
             trainingRequest.TrainingDescription = request.TrainingDescription;
             trainingRequest.NumberOfEmployees = request.NumberOfEmployees;

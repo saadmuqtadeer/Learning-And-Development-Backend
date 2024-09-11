@@ -13,7 +13,7 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
         public string RequestorName { get; set; }
         public string RequestorEmail { get; set; }
         public string Department { get; set; }
-        public string TrainingDetails { get; set; }
+        //public string TrainingDetails { get; set; }
         public string TrainingTitle { get; set; }
         public string TrainingDescription { get; set; }
         public int NumberOfEmployees { get; set; }
@@ -47,41 +47,53 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
 
         public async Task<TrainingResponse> Handle(CreateTrainingRequestCommand request, CancellationToken cancellationToken)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
             // Validate if the employee exists
             //if (!await EmployeeExists(request.EmployeeId))
             //{
             //    throw new Exception("Employee does not exist.");
             //}
-
-            var trainingRequest = new TrainingRequest
+            try
             {
-                RequestorName = request.RequestorName,
-                RequestorEmail = request.RequestorEmail,
-                Department = request.Department,
-                TrainingDetails = request.TrainingDetails,
-                TrainingTitle = request.TrainingTitle,
-                TrainingDescription = request.TrainingDescription,
-                NumberOfEmployees = request.NumberOfEmployees,
-                TechnicalSkills = request.TechnicalSkills,  // Updated to match the backend model
-                Duration = request.Duration,  // Updated to match the backend model
-                PreferredStartDate = request.PreferredStartDate,
-                TrainingLocation = request.TrainingLocation,
-                SpecialRequirements = request.SpecialRequirements,
-                EmployeeId = request.EmployeeId
-            };
+                if (request == null)
+                {
+                    throw new ArgumentNullException(nameof(request));
+                }
 
-            await _context.TrainingRequests.AddAsync(trainingRequest, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+                var trainingRequest = new TrainingRequest
+                {
+                    RequestorName = request.RequestorName,
+                    RequestorEmail = request.RequestorEmail,
+                    Department = request.Department,
+                    //TrainingDetails = request.TrainingDetails,
+                    TrainingTitle = request.TrainingTitle,
+                    TrainingDescription = request.TrainingDescription,
+                    NumberOfEmployees = request.NumberOfEmployees,
+                    TechnicalSkills = request.TechnicalSkills,  // Updated to match the backend model
+                    Duration = request.Duration,  // Updated to match the backend model
+                    PreferredStartDate = request.PreferredStartDate,
+                    TrainingLocation = request.TrainingLocation,
+                    SpecialRequirements = request.SpecialRequirements,
+                    EmployeeId = request.EmployeeId
+                };
 
-            return new TrainingResponse
+                await _context.TrainingRequests.AddAsync(trainingRequest, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new TrainingResponse
+                {
+                    Id = trainingRequest.Id
+                };
+
+            }
+            catch (Exception ex)
             {
-                Id = trainingRequest.Id
-            };
+                // Log the exception details
+                Console.Error.WriteLine($"Error occurred: {ex.Message}");
+                throw;
+            }
+           
+
+            
         }
     }
 }

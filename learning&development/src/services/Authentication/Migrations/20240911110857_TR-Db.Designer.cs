@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Authentication.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240911090844_TR-Db")]
+    [Migration("20240911110857_TR-Db")]
     partial class TRDb
     {
         /// <inheritdoc />
@@ -109,11 +109,6 @@ namespace Authentication.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("TrainingDescription")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("TrainingDetails")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");

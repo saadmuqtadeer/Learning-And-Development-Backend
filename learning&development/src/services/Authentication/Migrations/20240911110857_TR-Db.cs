@@ -39,7 +39,6 @@ namespace Authentication.Migrations
                     RequestorName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     RequestorEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Department = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    TrainingDetails = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     TrainingTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TrainingDescription = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     NumberOfEmployees = table.Column<int>(type: "int", nullable: false),

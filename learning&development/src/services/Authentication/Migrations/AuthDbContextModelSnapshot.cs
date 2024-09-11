@@ -110,11 +110,6 @@ namespace Authentication.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("TrainingDetails")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<string>("TrainingLocation")
                         .IsRequired()
                         .HasMaxLength(200)
