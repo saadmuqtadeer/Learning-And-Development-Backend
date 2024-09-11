@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AccountsService\Queries\" />
     <Folder Include="AdminService\Commands\" />
     <Folder Include="AdminService\Queries\" />
     <Folder Include="Dto\" />

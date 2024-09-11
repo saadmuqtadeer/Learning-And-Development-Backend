@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Authentication.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240909112806_appTrainingRequest")]
-    partial class appTrainingRequest
+    [Migration("20240911005320_update-tableName")]
+    partial class updatetableName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace Authentication.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.ToTable("registers");
+                    b.ToTable("Registers");
                 });
 #pragma warning restore 612, 618
         }

@@ -28,7 +28,7 @@ namespace Authentication.Controllers
         [Route("")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _context.registers.ToListAsync());
+            return Ok(await _context.Registers.ToListAsync());
         }
 
         [Authorize(Roles = "Admin")]
@@ -36,7 +36,7 @@ namespace Authentication.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var user = await _context.registers.FindAsync(id);
+            var user = await _context.Registers.FindAsync(id);
             if (user == null) return NotFound("User not found.");
             return Ok(user);
         }
@@ -48,7 +48,7 @@ namespace Authentication.Controllers
         {
             if (updatedUser == null) return BadRequest();
 
-            var user = await _context.registers.FindAsync(id);
+            var user = await _context.Registers.FindAsync(id);
             if (user == null) return NotFound("User not found.");
 
             user.FirstName = updatedUser.FirstName;
@@ -59,7 +59,7 @@ namespace Authentication.Controllers
             user.SecurityQuestion = updatedUser.SecurityQuestion;
             user.Role = updatedUser.Role;
 
-            _context.registers.Update(user);
+            _context.Registers.Update(user);
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "User updated successfully." });
@@ -70,10 +70,10 @@ namespace Authentication.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var user = await _context.registers.FindAsync(id);
+            var user = await _context.Registers.FindAsync(id);
             if (user == null) return NotFound("User not found.");
 
-            _context.registers.Remove(user);
+            _context.Registers.Remove(user);
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "User deleted successfully." });
@@ -86,7 +86,7 @@ namespace Authentication.Controllers
         {
             if (model == null) return BadRequest();
 
-            var existingUser = await _context.registers.FirstOrDefaultAsync(u => u.Email == model.Email);
+            var existingUser = await _context.Registers.FirstOrDefaultAsync(u => u.Email == model.Email);
             if (existingUser != null) return Conflict(new { Message = "User with this email already exists." });
 
             // Hash the password (replace with your preferred hashing method)
@@ -104,7 +104,7 @@ namespace Authentication.Controllers
                 Role = model.Role
             };
 
-            _context.registers.Add(user);
+            _context.Registers.Add(user);
             await _context.SaveChangesAsync();
 
             return Ok(new { Id = user.EmployeeId, Message = "User registered successfully." });
@@ -119,7 +119,7 @@ namespace Authentication.Controllers
                 return BadRequest("Invalid login request.");
             }
 
-            var model = _context.registers.FirstOrDefault(x => x.Email == login.Email);
+            var model = _context.Registers.FirstOrDefault(x => x.Email == login.Email);
 
             if (model == null)
             {
