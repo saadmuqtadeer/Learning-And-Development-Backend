@@ -20,7 +20,7 @@ namespace AuthAPI.Models
 
         [StringLength(50)]
         public string Department { get; set; }
-        
+
         //[StringLength(500)]
         //public string TrainingDetails { get; set; }  // Changed from TrainingDetails to match frontend
 
@@ -51,5 +51,17 @@ namespace AuthAPI.Models
         // Navigation property
         [ForeignKey("EmployeeId")]
         public virtual Register Registers { get; set; }
+
+        // New field
+        [Required]
+        public RequestStatus Status { get; set; } = RequestStatus.Pending; // Default value set to Pending
     }
+
+    public enum RequestStatus
+    {
+        Pending = 0,
+        Accepted = 1,
+        Rejected = 2
+    }
+
 }

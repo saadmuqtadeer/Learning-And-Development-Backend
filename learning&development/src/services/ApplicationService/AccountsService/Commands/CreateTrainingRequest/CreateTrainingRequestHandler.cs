@@ -23,6 +23,7 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
         public string TrainingLocation { get; set; }
         public string SpecialRequirements { get; set; }
         public int EmployeeId { get; set; }
+        public RequestStatus Status { get; set; } = RequestStatus.Pending; // Default status
     }
 
     public class TrainingResponse
@@ -73,7 +74,8 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
                     PreferredStartDate = request.PreferredStartDate,
                     TrainingLocation = request.TrainingLocation,
                     SpecialRequirements = request.SpecialRequirements,
-                    EmployeeId = request.EmployeeId
+                    EmployeeId = request.EmployeeId,
+                    Status = request.Status // Set the status from the command
                 };
 
                 await _context.TrainingRequests.AddAsync(trainingRequest, cancellationToken);
@@ -83,7 +85,6 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
                 {
                     Id = trainingRequest.Id
                 };
-
             }
             catch (Exception ex)
             {
@@ -91,9 +92,6 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
                 Console.Error.WriteLine($"Error occurred: {ex.Message}");
                 throw;
             }
-           
-
-            
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using ApplicationService.AccountsService.Commands.CreateTrainingProgram;
-using AuthAPI.Data;
+﻿using AuthAPI.Data;
 using AuthAPI.Models;
 using MediatR;
 using System;
@@ -24,6 +23,7 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
         public string TrainingLocation { get; set; }
         public string SpecialRequirements { get; set; }
         public int EmployeeId { get; set; }
+        public RequestStatus Status { get; set; } // Add Status property
     }
 
     public class TrainingResponse
@@ -62,6 +62,7 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
             trainingRequest.TrainingLocation = request.TrainingLocation;
             trainingRequest.SpecialRequirements = request.SpecialRequirements;
             trainingRequest.EmployeeId = request.EmployeeId;
+            trainingRequest.Status = request.Status; // Update Status property
 
             await _context.SaveChangesAsync(cancellationToken);
 
