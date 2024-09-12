@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Data;
 using AuthAPI.Models;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -13,30 +14,32 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
         public string RequestorName { get; set; }
         public string RequestorEmail { get; set; }
         public string Department { get; set; }
-        //public string TrainingDetails { get; set; }
         public string TrainingTitle { get; set; }
         public string TrainingDescription { get; set; }
         public int NumberOfEmployees { get; set; }
-        public string TechnicalSkills { get; set; }  // Updated to match the backend model
-        public int Duration { get; set; }  // Updated to match the backend model
+        public string TechnicalSkills { get; set; }
+        public int Duration { get; set; }
         public DateTime PreferredStartDate { get; set; }
         public string TrainingLocation { get; set; }
         public string SpecialRequirements { get; set; }
         public int EmployeeId { get; set; }
-        public RequestStatus Status { get; set; } = RequestStatus.Pending; // Default status
+        public RequestStatus Status { get; set; } = RequestStatus.Pending;
     }
 
     public class TrainingResponse
     {
         public int Id { get; set; }
     }
+
     public class CreateTrainingRequestHandler : IRequestHandler<CreateTrainingRequestCommand, TrainingResponse>
     {
         private readonly AuthDbContext _context;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public CreateTrainingRequestHandler(AuthDbContext context)
+        public CreateTrainingRequestHandler(AuthDbContext context, IHubContext<NotificationHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         public async Task<bool> EmployeeExists(int employeeId)
@@ -48,11 +51,6 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
 
         public async Task<TrainingResponse> Handle(CreateTrainingRequestCommand request, CancellationToken cancellationToken)
         {
-            // Validate if the employee exists
-            //if (!await EmployeeExists(request.EmployeeId))
-            //{
-            //    throw new Exception("Employee does not exist.");
-            //}
             try
             {
                 if (request == null)
@@ -65,21 +63,24 @@ namespace ApplicationService.AccountsService.Commands.CreateTrainingProgram
                     RequestorName = request.RequestorName,
                     RequestorEmail = request.RequestorEmail,
                     Department = request.Department,
-                    //TrainingDetails = request.TrainingDetails,
                     TrainingTitle = request.TrainingTitle,
                     TrainingDescription = request.TrainingDescription,
                     NumberOfEmployees = request.NumberOfEmployees,
-                    TechnicalSkills = request.TechnicalSkills,  // Updated to match the backend model
-                    Duration = request.Duration,  // Updated to match the backend model
+                    TechnicalSkills = request.TechnicalSkills,
+                    Duration = request.Duration,
                     PreferredStartDate = request.PreferredStartDate,
                     TrainingLocation = request.TrainingLocation,
                     SpecialRequirements = request.SpecialRequirements,
                     EmployeeId = request.EmployeeId,
-                    Status = request.Status // Set the status from the command
+                    Status = request.Status
                 };
 
                 await _context.TrainingRequests.AddAsync(trainingRequest, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
+
+                // Notify admin via SignalR
+                var message = $"New training request created: {request.TrainingTitle} by {request.RequestorName}.";
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "Admin", message);
 
                 return new TrainingResponse
                 {
