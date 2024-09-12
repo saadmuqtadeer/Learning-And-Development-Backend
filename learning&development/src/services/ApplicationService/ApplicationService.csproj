@@ -24,8 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AdminService\Commands\" />
-    <Folder Include="AdminService\Queries\" />
+    <Folder Include="AdminService\Commands\NewFolder\" />
     <Folder Include="EmployeeService\Commands\" />
     <Folder Include="EmployeeService\Queries\" />
   </ItemGroup>
