@@ -22,7 +22,14 @@ namespace ApplicationService.AccountsService.Commands.UpdateTrainingRequest
                 command.Id = id;
                 var response = await mediator.Send(command);
 
-                return response ? Results.Ok("Updated") : Results.NotFound();
+                if (response.Success)
+                {
+                    return Results.Ok(response.Message);
+                }
+                else
+                {
+                    return Results.NotFound(response.Message);
+                }
             });
         }
     }

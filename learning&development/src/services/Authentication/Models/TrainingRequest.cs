@@ -21,21 +21,18 @@ namespace AuthAPI.Models
         [StringLength(50)]
         public string Department { get; set; }
 
-        //[StringLength(500)]
-        //public string TrainingDetails { get; set; }  // Changed from TrainingDetails to match frontend
-
         [StringLength(100)]
         public string TrainingTitle { get; set; }
 
         [StringLength(500)]
         public string TrainingDescription { get; set; }
 
-        public int NumberOfEmployees { get; set; }  // Changed to nullable if needed, but frontend shows nulls as numbers
+        public int NumberOfEmployees { get; set; }
 
         [StringLength(200)]
-        public string TechnicalSkills { get; set; }  // Changed from TechnicalSkillSetRequired to match frontend
+        public string TechnicalSkills { get; set; }
 
-        public int Duration { get; set; }  // Changed from DurationInDays to match frontend
+        public int Duration { get; set; }
 
         public DateTime PreferredStartDate { get; set; }
 
@@ -46,15 +43,17 @@ namespace AuthAPI.Models
         public string SpecialRequirements { get; set; }
 
         [Required]
-        public int EmployeeId { get; set; }  // Foreign key to Registers.EmployeeId
+        public int EmployeeId { get; set; }
 
-        // Navigation property
         [ForeignKey("EmployeeId")]
         public virtual Register Registers { get; set; }
 
-        // New field
         [Required]
-        public RequestStatus Status { get; set; } = RequestStatus.Pending; // Default value set to Pending
+        public RequestStatus Status { get; set; } = RequestStatus.Pending;
+
+        // New optional field for feedback
+        [StringLength(1000)]
+        public string AdminFeedback { get; set; }
     }
 
     public enum RequestStatus
@@ -63,5 +62,4 @@ namespace AuthAPI.Models
         Accepted = 1,
         Rejected = 2
     }
-
 }

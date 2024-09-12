@@ -8,12 +8,19 @@ using System.Threading.Tasks;
 
 namespace ApplicationService.AdminService.Commands.UpdateTrainingRequestStatus
 {
-    public class UpdateTrainingRequestStatusCommand : IRequest<bool>
+    public class UpdateTrainingRequestStatusCommand : IRequest<UpdateResponse>
     {
         public int Id { get; set; }
         public string Status { get; set; }
+        public string AdminFeedback { get; set; } // New optional field
     }
-    public class UpdateTrainingRequestStatusHandler : IRequestHandler<UpdateTrainingRequestStatusCommand, bool>
+
+    public class UpdateResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
+    public class UpdateTrainingRequestStatusHandler : IRequestHandler<UpdateTrainingRequestStatusCommand, UpdateResponse>
     {
         private readonly AuthDbContext _context;
 
@@ -22,11 +29,15 @@ namespace ApplicationService.AdminService.Commands.UpdateTrainingRequestStatus
             _context = context;
         }
 
-        public async Task<bool> Handle(UpdateTrainingRequestStatusCommand request, CancellationToken cancellationToken)
+        public async Task<UpdateResponse> Handle(UpdateTrainingRequestStatusCommand request, CancellationToken cancellationToken)
         {
             if (!Enum.TryParse<RequestStatus>(request.Status, true, out var status))
             {
-                return false; // Invalid status
+                return new UpdateResponse
+                {
+                    Success = false,
+                    Message = "Invalid status provided."
+                };
             }
 
             var trainingRequest = await _context.TrainingRequests
@@ -34,14 +45,31 @@ namespace ApplicationService.AdminService.Commands.UpdateTrainingRequestStatus
 
             if (trainingRequest == null)
             {
-                return false; // Request not found
+                return new UpdateResponse
+                {
+                    Success = false,
+                    Message = "Training request not found."
+                };
             }
 
             trainingRequest.Status = status;
+            trainingRequest.AdminFeedback = request.AdminFeedback; // Set feedback if provided
+
             _context.TrainingRequests.Update(trainingRequest);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true; // Update successful
+            string message = status switch
+            {
+                RequestStatus.Accepted => "Training request has been accepted.",
+                RequestStatus.Rejected => "Training request has been rejected.",
+                _ => "Training request status has been updated."
+            };
+
+            return new UpdateResponse
+            {
+                Success = true,
+                Message = message
+            };
         }
     }
 }
