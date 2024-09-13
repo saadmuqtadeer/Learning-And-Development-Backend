@@ -53,7 +53,8 @@ namespace AuthAPI.Models
 
         // New optional field for feedback
         [StringLength(1000)]
-        public string AdminFeedback { get; set; }
+        [Required]
+        public string AdminFeedback { get; set; } = string.Empty;
     }
 
     public enum RequestStatus

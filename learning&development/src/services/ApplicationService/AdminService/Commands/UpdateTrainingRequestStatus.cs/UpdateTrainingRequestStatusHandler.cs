@@ -12,7 +12,8 @@ namespace ApplicationService.AdminService.Commands.UpdateTrainingRequestStatus
     {
         public int Id { get; set; }
         public string Status { get; set; }
-        public string AdminFeedback { get; set; } // New optional field
+        public string AdminFeedback { get; set; } = string.Empty;
+        // New optional field
     }
 
     public class UpdateResponse
@@ -53,7 +54,8 @@ namespace ApplicationService.AdminService.Commands.UpdateTrainingRequestStatus
             }
 
             trainingRequest.Status = status;
-            trainingRequest.AdminFeedback = request.AdminFeedback; // Set feedback if provided
+            trainingRequest.AdminFeedback = string.IsNullOrEmpty(request.AdminFeedback) ? string.Empty : request.AdminFeedback;
+            //trainingRequest.AdminFeedback = request.AdminFeedback; // Set feedback if provided
 
             _context.TrainingRequests.Update(trainingRequest);
             await _context.SaveChangesAsync(cancellationToken);
